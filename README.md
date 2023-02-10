@@ -11,3 +11,7 @@ https://discord.gg/HRT9Rh5x3R
 2.Use these fixs may let you get banned for 30 days or forever, depends on luck.
 
 3.If any fix broke with version update ,please open an issue, thanks!
+
+# Other
+you can use script under vb_merge folder to merge FrameAnalysisDump Files ,and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
+and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, so you can import it into game.

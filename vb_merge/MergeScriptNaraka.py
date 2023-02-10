@@ -394,13 +394,14 @@ def get_pointlit_and_trianglelist_indices(input_ib_hash, root_vs):
     for trianglelist_index in trianglelist_indices_dict:
         trianglelist_indices.append(trianglelist_index)
 
-    print(pointlist_indices)
-    print(trianglelist_indices)
+    print("----------------------------------------------------------")
+    print("Pointlist vb indices: " + str(pointlist_indices))
+    print("Trianglelist vb indices: " + str(trianglelist_indices))
 
     return pointlist_indices, trianglelist_indices
 
 
-def output_ini_file(pointlist_indices, trianglelist_indices):
+def output_ini_file(pointlist_indices, input_ib_hash, part_name):
     # TODO Now this function is testing, and finally will use it to generate the final .ini file.
     filenames = sorted(glob.glob(pointlist_indices[0] + '-vb*txt'))
     position_vb = filenames[0]
@@ -412,9 +413,27 @@ def output_ini_file(pointlist_indices, trianglelist_indices):
     blend_vb = filenames[2]
     blend_vb = blend_vb[blend_vb.find("-vb2=") + 5:blend_vb.find("-vs=")]
 
-    print("position_vb: " + position_vb)
-    print("texcoord_vb: " + texcoord_vb)
-    print("blend_vb: " + blend_vb)
+    # print("position_vb: " + position_vb)
+    # print("texcoord_vb: " + texcoord_vb)
+    # print("blend_vb: " + blend_vb)
+
+    output_bytes = b""
+    output_bytes = output_bytes + (b"[Resource_POSITION]\r\ntype = Buffer\r\nstride = 40\r\nfilename = " + part_name.encode() + b"_POSITION.buf\r\n\r\n")
+    output_bytes = output_bytes + (b"[Resource_BLEND]\r\ntype = Buffer\r\nstride = 32\r\nfilename = " + part_name.encode() + b"_BLEND.buf\r\n\r\n")
+    output_bytes = output_bytes + (b"[Resource_TEXCOORD]\r\ntype = Buffer\r\nstride = 8\r\nfilename = " + part_name.encode() + b"_TEXCOORD.buf\r\n\r\n")
+    output_bytes = output_bytes + (b"[Resource_IB_FILE]\r\ntype = Buffer\r\nformat = DXGI_FORMAT_R16_UINT\r\nfilename = " + part_name.encode() + b".ib\r\n\r\n")
+
+    output_bytes = output_bytes + (b"[TextureOverride_IB_SKIP]\r\nhash = "+input_ib_hash.encode()+b"\r\nhandling = skip\r\nib = Resource_IB_FILE\r\ndrawindexed = auto\r\n\r\n")
+    output_bytes = output_bytes + (b"[TextureOverride_POSITION]\r\nhash = "+position_vb.encode()+b"\r\nvb0 = Resource_POSITION\r\n\r\n")
+    output_bytes = output_bytes + (b"[TextureOverride_TEXCOORD]\r\nhash = "+texcoord_vb.encode()+b"\r\nvb0 = Resource_TEXCOORD\r\n\r\n")
+    output_bytes = output_bytes + (b"[TextureOverride_BLEND]\r\nhash = "+blend_vb.encode()+b"\r\nvb0 = Resource_BLEND\r\n\r\n")
+
+    output_file = open("output/"+part_name+".ini", "wb+")
+    output_file.write(output_bytes)
+    output_file.close()
+
+
+
 
 
 
@@ -422,7 +441,7 @@ def output_ini_file(pointlist_indices, trianglelist_indices):
 def start_merge_files(input_ib_hash, part_name , root_vs):
     pointlist_indices, trianglelist_indices = get_pointlit_and_trianglelist_indices(input_ib_hash,root_vs)
 
-    output_ini_file(pointlist_indices,trianglelist_indices)
+    output_ini_file(pointlist_indices, input_ib_hash, part_name)
 
     # The vertex data you want to read from pointlist vb file.
     read_pointlist_element_list = [b"POSITION", b"NORMAL", b"TANGENT", b"BLENDWEIGHTS", b"BLENDINDICES"]
@@ -456,10 +475,10 @@ def start_merge_files(input_ib_hash, part_name , root_vs):
         if b"TEXCOORD" not in element_name_list:
             continue
 
-        for vertex_data in first_vertex_data_chunk:
-            print(vertex_data.element_name)
-            print(vertex_data.data)
-        print("-----------------------------------")
+        # for vertex_data in first_vertex_data_chunk:
+        #     print(vertex_data.element_name)
+        #     print(vertex_data.data)
+        # print("-----------------------------------")
         repeat_vertex_data_chunk_list_list.append(final_trianglelist_vertex_data_chunk_list)
 
     # Remove duplicated contents.
@@ -532,8 +551,8 @@ def start_merge_files(input_ib_hash, part_name , root_vs):
     # Output to file.
     for index in range(len(ib_file_bytes)):
         ib_file_byte = ib_file_bytes[index]
-        output_vbname = "output/output-" + input_ib_hash + part_name + str(index) + "-vb0.txt"
-        output_ibname = "output/output-" + input_ib_hash + part_name + str(index) + "-ib.txt"
+        output_vbname = "output/" + input_ib_hash + "-" + part_name + "-vb0.txt"
+        output_ibname = "output/" + input_ib_hash + "-" + part_name + "-ib.txt"
         output_vb_fileinfo.output_filename = output_vbname
 
         # Write to ib file.
@@ -634,12 +653,12 @@ if __name__ == "__main__":
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"a86d5d6c": "cloth", "f4d034ca": "body"}
+    ib_hashs = {"a86d5d6c": "cloth", "f4d034ca": "JustinaGuBody"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS, and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")
 
-    print("All process done！")
+    print("----------------------------------------------------------\r\nAll process done！")
 
     
 

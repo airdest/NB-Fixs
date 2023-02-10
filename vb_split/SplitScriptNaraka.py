@@ -16,7 +16,7 @@ import glob
 import os
 import re
 import json
-from SplitStructureGI import *
+from SplitStructureNaraka import *
 
 GLOBAL_ELEMENT_NUMBER = None
 

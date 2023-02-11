@@ -425,8 +425,8 @@ def output_ini_file(pointlist_indices, input_ib_hash, part_name):
 
     output_bytes = output_bytes + (b"[TextureOverride_IB_SKIP]\r\nhash = "+input_ib_hash.encode()+b"\r\nhandling = skip\r\nib = Resource_IB_FILE\r\ndrawindexed = auto\r\n\r\n")
     output_bytes = output_bytes + (b"[TextureOverride_POSITION]\r\nhash = "+position_vb.encode()+b"\r\nvb0 = Resource_POSITION\r\n\r\n")
-    output_bytes = output_bytes + (b"[TextureOverride_TEXCOORD]\r\nhash = "+texcoord_vb.encode()+b"\r\nvb0 = Resource_TEXCOORD\r\n\r\n")
-    output_bytes = output_bytes + (b"[TextureOverride_BLEND]\r\nhash = "+blend_vb.encode()+b"\r\nvb0 = Resource_BLEND\r\n\r\n")
+    output_bytes = output_bytes + (b"[TextureOverride_TEXCOORD]\r\nhash = "+texcoord_vb.encode()+b"\r\nvb1 = Resource_TEXCOORD\r\n\r\n")
+    output_bytes = output_bytes + (b"[TextureOverride_BLEND]\r\nhash = "+blend_vb.encode()+b"\r\nvb2 = Resource_BLEND\r\n\r\n")
 
     output_file = open("output/"+part_name+".ini", "wb+")
     output_file.write(output_bytes)
@@ -648,12 +648,12 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    os.chdir("C:/Users/Administrator/Desktop/NarakaLoader/FrameAnalysis-2023-02-10-192332/")
+    os.chdir("C:/Users/Administrator/Desktop/NarakaLoader/FrameAnalysis-2023-02-11-184943/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"a86d5d6c": "cloth", "f4d034ca": "JustinaGuBody"}
+    ib_hashs = {"ff92abf9": "body", "2eb15fc2": "cloth"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS, and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")

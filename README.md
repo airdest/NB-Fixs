@@ -11,6 +11,10 @@ and please don't send pornographic content in kook channel. Thank you !
 
 https://kook.top/0CZ8dh
 
+Here is a simple tutorial about how to use these scripts,and sorry for the bad english.
+
+https://youtu.be/jh9hHZc7qsU
+
 # Notes
 1.The fixs may only work on NVDIA graphics,and may work on AMD gpu incorrectly.
 

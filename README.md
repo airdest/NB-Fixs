@@ -1,9 +1,15 @@
 # NB-Fixs
 Tools, instructions and 3DFixs for make custom models on NB.
 
-If you have any question, please contact me at this Discord channel: 
+If you have any question, please contact me at this Discord channel or open an issue: 
 
 https://discord.gg/HRT9Rh5x3R
+
+If you are in Chinese Mainland ,you can use kook for convinence,
+
+and please don't send pornographic content in kook channel. Thank you !:
+
+https://kook.top/0CZ8dh
 
 # Notes
 1.The fixs may only work on NVDIA graphics,and may work on AMD gpu incorrectly.

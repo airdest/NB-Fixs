@@ -7,7 +7,7 @@ https://discord.gg/HRT9Rh5x3R
 
 If you are in Chinese Mainland ,you can use kook for convinence,
 
-and please don't send pornographic content in kook channel. Thank you !:
+and please don't send pornographic content in kook channel. Thank you !
 
 https://kook.top/0CZ8dh
 

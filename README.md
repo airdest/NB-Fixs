@@ -5,12 +5,6 @@ If you have any question, please contact me at this Discord channel or open an i
 
 https://discord.gg/HRT9Rh5x3R
 
-If you are in Chinese Mainland ,you can use kook for convinence,
-
-and please don't send pornographic content in kook channel. Thank you !
-
-https://kook.top/0CZ8dh
-
 Here is a simple tutorial about how to use these scripts,and sorry for the bad english.
 
 https://youtu.be/jh9hHZc7qsU

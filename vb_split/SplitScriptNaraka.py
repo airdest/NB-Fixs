@@ -125,7 +125,7 @@ if __name__ == "__main__":
     GLOBAL_ELEMENT_NUMBER = b"5"
 
     # 各文件名称
-    source_name = "cloth"
+    source_name = "body"
     vb_name = source_name + ".vb"
     fmt_name = source_name + ".fmt"
     ib_name = source_name + ".ib"

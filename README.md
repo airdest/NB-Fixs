@@ -5,19 +5,22 @@ If you have any question, please contact me at this Discord channel or open an i
 
 https://discord.gg/HRT9Rh5x3R
 
-Here is a simple tutorial about how to use these scripts,and sorry for the bad english.
+Here is a simple tutorial about how to use these scripts, and sorry for the bad english.
 
 https://youtu.be/jh9hHZc7qsU
 
 # Notes
-1.The fixs may only work on NVDIA graphics,and may work on AMD gpu incorrectly.
+1.The fixs may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
 
 2.Use these fixs may let you get banned for 30 days or forever, depends on luck.
 
-3.If any fix broke with version update ,please open an issue, thanks!
+3.If any fix or script broken with version update ,please open an issue, thanks!
 
-you can use script under vb_merge folder to merge FrameAnalysisDump Files ,and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
-and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, so you can import it into game.
+you can use script under vb_merge folder to merge FrameAnalysisDump Files ,
+and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
+
+and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, 
+so you can import it back into game.
 
 For convenience,  It's better to use GIMI version 3dmigoto ,so you can correctly import vb file into game.
 
@@ -31,9 +34,9 @@ I do not condone the use of these tools and programs on official servers,
 and take no responsibility for any consequences as a result if you do.
 
 # Acknowledgements
-Thanks a lot to bob3b, DarkStarSword, for tutorial and code reference!
+Thanks a lot to bob3b, DarkStarSword, for their tutorial and code reference!
 
 Thanks a lot to Helixmod, and chiri for open sourcing 3dmigoto！
 
 Special thanks for SilentNightSound'GIMI for code reference and his GIMI version 3dmigoto
-which can make a large amount of game to enable special fix!
+which can make a large amount of game to enable any model fix!

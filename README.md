@@ -22,7 +22,7 @@ and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
 and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, 
 so you can import it back into game.
 
-For convenience,  It's better to use GIMI version 3dmigoto ,so you can correctly import vb file into game.
+For convenience,  It's better to use NarakaLoaderV1.0 ,so you can correctly import vb file into game, and you can press F3 to open or close the fix.
 
 # DISCLAIMER
 I strongly recommend only using private servers or Single-Player Game for modding. 
@@ -38,5 +38,4 @@ Thanks a lot to bob3b, DarkStarSword, for their tutorial and code reference!
 
 Thanks a lot to Helixmod, and chiri for open sourcing 3dmigoto！
 
-Special thanks for SilentNightSound'GIMI for code reference and his GIMI version 3dmigoto
-which can make a large amount of game to enable any model fix!
+Special thanks for SilentNightSound's GIMI project for code reference.

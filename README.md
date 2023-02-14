@@ -1,11 +1,11 @@
 # NB-Fixs
 Tools, instructions and 3DFixs for make custom models on NB.
 
-If you have any question, please contact me at this Discord channel or open an issue: 
+If you have any question, please tell me at this discord channel or open an issue: 
 
 https://discord.gg/HRT9Rh5x3R
 
-Here is a simple tutorial about how to use these scripts, and sorry for the bad english.
+Here is a simple example about how to use these scripts, sorry for the bad english.
 
 https://youtu.be/jh9hHZc7qsU
 
@@ -15,6 +15,8 @@ https://youtu.be/jh9hHZc7qsU
 2.Use these fixs may let you get banned for 30 days or forever, depends on luck.
 
 3.If any fix or script broken with version update ,please open an issue, thanks!
+
+4.more fixs is located at discord's FIXS & RESOURCES RELEASE category.
 
 you can use script under vb_merge folder to merge FrameAnalysisDump Files ,
 and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.

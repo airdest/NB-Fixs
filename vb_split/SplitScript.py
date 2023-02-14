@@ -165,15 +165,16 @@ def get_header_info(vb_file_name):
 
 
 if __name__ == "__main__":
-    # 设置工作目录
+    # set work dir.
     work_dir = "C:/Users/Administrator/Desktop/NarakaTest/"
     os.chdir(work_dir)
 
-    # 设置常量
+    # set element number ,Naraka must be 5.
     GLOBAL_ELEMENT_NUMBER = b"5"
 
-    # 各文件名称
-    source_name = "body"
+    # combine the output filename.
+    # TODO add list process,to process multiple objects.
+    source_name = "shangyi"
     vb_name = source_name + ".vb"
     fmt_name = source_name + ".fmt"
     ib_name = source_name + ".ib"
@@ -182,17 +183,12 @@ if __name__ == "__main__":
     vb_file_buffer = vb_file.read()
     vb_file.close()
 
-    # TODO 首先解析FMT文件，读取按顺序的Element元素信息
     header_info = get_header_info(fmt_name)
 
-    # TODO 首先要明确这个vertex-data最终要拆分成几部分：
-    # TODO vb0, vb1, vb2
-    # TODO 目前可以确定vb1只有TEXCOORD一个属性，接下来就看BLENDWIDTH和BLENDINDICES放哪儿了
     """
-    elementnumber分别是
-    vb0存放POSITION，NORMAL。TANGENT，COLOR （测试TEXCOORD1） 0,1,2,3,5
-    vb1存放TEXCOORD  4  
-    vb2存放BLENDWEIGHTS，BLENDINDICES  6,7
+    vb0 for POSITION，NORMAL。TANGENT
+    vb1 for BLENDWEIGHTS，BLENDINDICES
+    vb2 for TEXCOORD
     """
 
     # fmt文件的原始步长

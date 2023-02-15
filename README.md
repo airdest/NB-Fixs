@@ -6,21 +6,18 @@ If you have any question, please tell me at this discord channel or open an issu
 https://discord.gg/HRT9Rh5x3R
 
 # Notes
-1.These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
+1.Fixs is located at discord's FIXS&RESOURCES RELEASE category.
+These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
+Use these fix may let you get banned for 30 days or forever, depends on luck.
 
-2.Use these fix may let you get banned for 30 days or forever, depends on luck.
-
-3.If any fix or script broken with version update ,please open an issue, thanks!
-
-4.fixs is located at discord's FIXS&RESOURCES RELEASE category.
-
-you can use script under vb_merge folder to merge FrameAnalysisDump Files ,
+you can use script under vb_merge folder to merge FrameAnalysisDump Files , 
 and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
 
 and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, 
 so you can import it back into game.
 
-For convenience,  It's better to use NarakaLoaderV1.0 ,so you can correctly import vb file into game, and you can press F3 to open or close the fix.
+For convenience,  It's better to use NarakaLoaderV1.0 ,so you can correctly import vb file into game, 
+and you can press F3 to open or close the fix.
 
 # DISCLAIMER
 I strongly recommend only using private servers or Single-Player Game for modding. 

@@ -755,6 +755,9 @@ if __name__ == "__main__":
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")
         # TODO add do not use pointlist flag,to export weapen and other object without pointlist tech.
         # TODO add use specific index to read pointlist info.
+        # TODO add a variable to specify output folder.
+        # TODO solve the vertex limit problem,
+        #  because we can't correctly replace a object which vertex number is more than original object.
 
     print("----------------------------------------------------------\r\nAll process done！")
 

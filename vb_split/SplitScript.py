@@ -271,3 +271,5 @@ if __name__ == "__main__":
     source_names = ["cloth"]
     for source_name in source_names:
         split_file(source_name)
+
+    print("----------------------------------------------------------\r\nAll process done！")

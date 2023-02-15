@@ -513,12 +513,16 @@ def output_ini_file(pointlist_indices, input_ib_hash, part_name):
     output_file.close()
 
 
+def start_merge_files(input_ib_hash, part_name, root_vs, use_pointlist_tech=True, force_pointlist_index=None):
+    """
 
-
-
-
-
-def start_merge_files(input_ib_hash, part_name , root_vs):
+    :param input_ib_hash: the index buffer hash you want to extract.
+    :param part_name: set a name for this ib part.
+    :param root_vs: if a game use pointlist tech,it's animation will load in root_vs.
+    :param use_pointlist_tech: True or False, if true,use pointlist tech,if not,use trianglelist tech only.
+    :param force_pointlist_index: if multiple pointlist file appears,you can force to use a special pointlist file index.
+    :return:
+    """
     pointlist_indices, trianglelist_indices = get_pointlit_and_trianglelist_indices(input_ib_hash,root_vs)
 
     output_ini_file(pointlist_indices, input_ib_hash, part_name)
@@ -728,13 +732,13 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    FrameAnalyseFolder = "FrameAnalysis-2023-02-14-194835"
+    FrameAnalyseFolder = "FrameAnalysis-2023-02-15-115716"
     os.chdir("C:/Users/Administrator/Desktop/NarakaLoader/" + FrameAnalyseFolder + "/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"f4031acc":"qunzi","17667462":"shangyi","9fd57cc6":"body"}
+    ib_hashs = {"64af2a60":"body"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS, and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")

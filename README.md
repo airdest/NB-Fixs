@@ -5,18 +5,14 @@ If you have any question, please tell me at this discord channel or open an issu
 
 https://discord.gg/HRT9Rh5x3R
 
-Here is a simple example about how to use these scripts, sorry for the bad english.
-
-https://youtu.be/jh9hHZc7qsU
-
 # Notes
-1.The fixs may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
+1.These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
 
-2.Use these fixs may let you get banned for 30 days or forever, depends on luck.
+2.Use these fix may let you get banned for 30 days or forever, depends on luck.
 
 3.If any fix or script broken with version update ,please open an issue, thanks!
 
-4.more fixs is located at discord's FIXS & RESOURCES RELEASE category.
+4.fixs is located at discord's FIXS&RESOURCES RELEASE category.
 
 you can use script under vb_merge folder to merge FrameAnalysisDump Files ,
 and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.

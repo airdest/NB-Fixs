@@ -47,8 +47,6 @@ class Element:
                 self.byte_width = 8
             else:
                 self.byte_width = 8
-                # TODO 测试它的原始R8G8B8A8_UNORM 是否能正确导入
-                # element.format = b"R32G32B32A32_FLOAT"
         if self.semantic_name == b"BLENDWEIGHTS":
             self.byte_width = 16
         if self.semantic_name == b"BLENDINDICES":
@@ -75,34 +73,34 @@ def get_header_info(vb_file_name):
 
     header_info = HeaderInfo()
 
-    # 用于控制标题部分读取
+
     header_process_over = False
-    # 用于控制Elements部分读取
+
     elements_all_process_over = False
     elements_single_process_over = False
-    # 用来装element列表
+
     element_list = []
-    # 用来临时装一个Element
+
     element_tmp = Element()
 
     while vb_file.tell() < os.path.getsize(vb_file.name):
-        # 读取一行
+        # read a line to process.
         line = vb_file.readline()
-        # 处理header
+        # process Headerinfo part.
         if not header_process_over:
-            # TODO 这里不够兼容，因为不能处理first vertex在各个vb文件中不同的情况，具体后续再测试吧
+
             if line.startswith(b"stride: "):
                 stride = line[line.find(b"stride") + b"stride: ".__len__():line.find(b"\r\n")]
                 header_info.stride = stride
-            # 设置first_vertex,因为所有文件的first_vertex都是相同的，都是0，所以这里会取最后一次的first_vertex
+            # set first_vertex
             if line.startswith(b"first vertex: "):
                 first_vertex = line[line.find(b"first vertex: ") + b"first vertex: ".__len__():line.find(b"\r\n")]
                 header_info.first_vertex = first_vertex
-            # 设置vertex_count,因为所有文件的vertex_count都是相同的，所以这里会取最后一次的vertex_count
+            # set vertex_count
             if line.startswith(b"vertex count: "):
                 vertex_count = line[line.find(b"vertex count: ") + b"vertex count: ".__len__():line.find(b"\r\n")]
                 header_info.vertex_count = vertex_count
-            # 设置topology,因为所有文件的topology都是相同的，所以这里会取最后一次的topology
+            # set topology
             if line.startswith(b"topology: "):
                 topology = line[line.find(b"topology: ") + b"topology: ".__len__():line.find(b"\r\n")]
                 header_info.topology = topology
@@ -110,13 +108,13 @@ def get_header_info(vb_file_name):
             if header_info.topology is not None:
                 header_process_over = True
 
-        # 处理Element部分,同理，所有vb0,1,2这样文件的element部分都是完全相同的，所以默认赋值的最后一个也是正确的
+        # process Element part.
         if not elements_all_process_over:
 
             if line.startswith(b"element["):
-                # 检测到element[  说明开始了新的element处理
+                # start a new element process.
                 elements_single_process_over = False
-                # 初始化ElementTmp
+
                 element_tmp = Element()
                 element_number = line[line.find(b"element[") + b"element[".__len__():line.find(b"]:\r\n")]
                 element_tmp.element_number = element_number
@@ -133,7 +131,7 @@ def get_header_info(vb_file_name):
             if line.startswith(b"  InputSlot: "):
                 input_slot = line[line.find(b"  InputSlot: ") + b"  InputSlot: ".__len__():line.find(b"\r\n")]
                 element_tmp.input_slot = input_slot
-                # 因为最终都在一个文件里面，所以所有的input_slot都设置为0
+                # must be all zero
                 element_tmp.input_slot = b"0"
             if line.startswith(b"  AlignedByteOffset: "):
                 aligned_byte_offset = line[line.find(
@@ -147,11 +145,11 @@ def get_header_info(vb_file_name):
                 instance_data_step_rate = line[line.find(
                     b"  InstanceDataStepRate: ") + b"  InstanceDataStepRate: ".__len__():line.find(b"\r\n")]
                 element_tmp.instance_data_step_rate = instance_data_step_rate
-                # 加入之前修正bytewidth
+                # revise bytewidth.
                 element_tmp.revise()
-                # element_tmp加入list
+                # element_tmp append to list.
                 element_list.append(element_tmp)
-                # 单个处理完毕
+                # single element process over.
                 elements_single_process_over = True
 
             if element_tmp.element_number == GLOBAL_ELEMENT_NUMBER and elements_single_process_over:
@@ -159,25 +157,14 @@ def get_header_info(vb_file_name):
                 elements_all_process_over = True
                 break
 
-    # 读取完header部分后，关闭文件
+    # safely close the file.
     vb_file.close()
     return header_info
 
 
-if __name__ == "__main__":
-    # set work dir.
-    work_dir = "C:/Users/Administrator/Desktop/NarakaTest/"
-    os.chdir(work_dir)
-
-    # set element number ,Naraka must be 5.
-    GLOBAL_ELEMENT_NUMBER = b"5"
-
-    # combine the output filename.
-    # TODO add list process,to process multiple objects.
-    source_name = "shangyi"
+def split_file(source_name):
     vb_name = source_name + ".vb"
     fmt_name = source_name + ".fmt"
-    ib_name = source_name + ".ib"
 
     vb_file = open(vb_name, "rb")
     vb_file_buffer = vb_file.read()
@@ -185,14 +172,7 @@ if __name__ == "__main__":
 
     header_info = get_header_info(fmt_name)
 
-    """
-    vb0 for POSITION，NORMAL。TANGENT
-    vb1 for BLENDWEIGHTS，BLENDINDICES
-    vb2 for TEXCOORD
-    """
-
     # fmt文件的原始步长
-
     combined_stride = int(header_info.stride.decode())
 
     # vertex_data的数量
@@ -204,17 +184,15 @@ if __name__ == "__main__":
     # strides
     width_list = []
 
-    # 初始化offset_list和width_list，方便后续使用
     for element in header_info.elementlist:
         offset_list.append(int(element.aligned_byte_offset.decode()))
         width_list.append(element.byte_width)
     print(width_list)
 
-    # 用来存放解析好的vertex_data
+    # use to store parsed vertex_data.
     vertex_data_list = [[] for i in range(vertex_count)]
 
-
-    # 解析vertex_data并装入vertex_data_list
+    # parse vertex_data,load into vertex_data_list.
     for index in range(len(width_list)):
         for i in range(vertex_count):
             start_index = i * combined_stride + offset_list[index]
@@ -223,14 +201,18 @@ if __name__ == "__main__":
 
     print(vertex_data_list[0])
 
-    # 解析vertex_data_list，分别装载vb0,vb1,vb2
+    # parse vertex_data_list，and load vb0,vb1,vb2
     vb0_vertex_data = [[] for i in range(vertex_count)]
     vb1_vertex_data = [[] for i in range(vertex_count)]
     vb2_vertex_data = [[] for i in range(vertex_count)]
 
+    """
+    vb0 for POSITION，NORMAL。TANGENT
+    vb1 for BLENDWEIGHTS，BLENDINDICES
+    vb2 for TEXCOORD
+    """
     for index in range(len(width_list)):
         for i in range(vertex_count):
-            # TODO POSITION
             # POSITION
             if index == 0:
                 vb0_vertex_data[i].append(vertex_data_list[i][0])
@@ -241,7 +223,6 @@ if __name__ == "__main__":
             if index == 2:
                 vb0_vertex_data[i].append(vertex_data_list[i][2])
 
-            # TODO BLEND
             # BLENDWEIGHT
             if index == 3:
                 vb1_vertex_data[i].append(vertex_data_list[i][3])
@@ -249,18 +230,9 @@ if __name__ == "__main__":
             if index == 4:
                 vb1_vertex_data[i].append(vertex_data_list[i][4])
 
-            # TODO TEXCOORD 但为什么stride是12？？？难道COLOR不需要？这里永劫干脆就没有COLOR
             # TEXCOORD
             if index == 5:
                 vb2_vertex_data[i].append(vertex_data_list[i][5])
-
-            # # TEXCOORD
-            # if index == 6:
-            #     vb2_vertex_data[i].append(vertex_data_list[i][6])
-            # # TEXCOORD1
-            # if index == 7:
-            #     vb2_vertex_data[i].append(vertex_data_list[i][7])
-
 
     vb0_bytes = b""
     for vertex_data in vb0_vertex_data:
@@ -285,3 +257,17 @@ if __name__ == "__main__":
         output_vb1_file.write(vb1_bytes)
     with open(output_vb2_filename, "wb+") as output_vb2_file:
         output_vb2_file.write(vb2_bytes)
+
+
+if __name__ == "__main__":
+    # set work dir.
+    work_dir = "C:/Users/Administrator/Desktop/NarakaTest/"
+    os.chdir(work_dir)
+
+    # set element number ,Naraka must be 5.
+    GLOBAL_ELEMENT_NUMBER = b"5"
+
+    # combine the output filename.
+    source_names = ["body"]
+    for source_name in source_names:
+        split_file(source_name)

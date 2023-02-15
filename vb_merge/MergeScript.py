@@ -17,10 +17,6 @@ import glob
 import os
 import shutil
 
-# List of global variables
-RELATED_VB_INDEX_LIST = []  # TODO The related file number indices from your input vb or ib hash. looks like:000001,
-# 000002,000003, use this to confirm which file should be moved to output folder.
-
 
 class HeaderInfo:
     file_index = None
@@ -364,8 +360,16 @@ def output_model_txt(vb_file_info):
     output_file.close()
 
 
-def move_related_files(move_dds=True, move_vscb=True,move_pscb=True):
-    # Create output folder in case it doesn't exists.
+def move_related_files(indices, move_dds=False, only_pst7=False, move_vscb=False, move_pscb=False):
+    """
+    :param indices:  the file indix you want to move
+    :param move_dds: weather move dds file.
+    :param only_pst7: weather only move ps-t7 dds file.
+    :param move_vscb:
+    :param move_pscb:
+    :return:
+    """
+    # Create output folder in case it doesn't exist.
     if not os.path.exists('output'):
         os.mkdir('output')
 
@@ -373,10 +377,14 @@ def move_related_files(move_dds=True, move_vscb=True,move_pscb=True):
         print("----------------------------------------------------------------")
         print("Start to move .dds files.")
         # Start to move .dds files.
-        filenames = glob.glob('*.dds')
+        if only_pst7:
+            filenames = glob.glob('*ps-t7*.dds')
+        else:
+            filenames = glob.glob('*.dds')
+
         for filename in filenames:
             if os.path.exists(filename):
-                for index in RELATED_VB_INDEX_LIST:
+                for index in indices:
                     if filename.__contains__(index):
                         # print("Moving ： " + filename + " ....")
                         shutil.copy2(filename, 'output/' + filename)
@@ -389,7 +397,7 @@ def move_related_files(move_dds=True, move_vscb=True,move_pscb=True):
         for filename in filenames:
             if os.path.exists(filename):
                 # Must have the vb index you sepcified.
-                for index in RELATED_VB_INDEX_LIST:
+                for index in indices:
                     if filename.__contains__(index):
                         # print("Moving ： " + filename + " ....")
                         shutil.copy2(filename, 'output/' + filename)
@@ -402,7 +410,7 @@ def move_related_files(move_dds=True, move_vscb=True,move_pscb=True):
         for filename in filenames:
             if os.path.exists(filename):
                 # Must have the vb index you sepcified.
-                for index in RELATED_VB_INDEX_LIST:
+                for index in indices:
                     if filename.__contains__(index):
                         # print("Moving ： " + filename + " ....")
                         shutil.copy2(filename, 'output/' + filename)
@@ -524,6 +532,8 @@ def start_merge_files(input_ib_hash, part_name, root_vs, use_pointlist_tech=True
     :return:
     """
     pointlist_indices, trianglelist_indices = get_pointlit_and_trianglelist_indices(input_ib_hash,root_vs)
+
+    move_related_files(trianglelist_indices, move_dds=True, only_pst7=True)
 
     output_ini_file(pointlist_indices, input_ib_hash, part_name)
 
@@ -732,18 +742,18 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    FrameAnalyseFolder = "FrameAnalysis-2023-02-15-115716"
+    FrameAnalyseFolder = "FrameAnalysis-2023-02-15-140715"
     os.chdir("C:/Users/Administrator/Desktop/NarakaLoader/" + FrameAnalyseFolder + "/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"64af2a60":"body"}
+    ib_hashs = {"a86d5d6c": "cloth", "f4d034ca": "body"}
     for input_ib_hash in ib_hashs:
-        # Naraka use e8425f64cfb887cd as it's ROOT VS, and this value is different between games which use pointlist topology.
+        # Naraka use e8425f64cfb887cd as it's ROOT VS,
+        # and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")
         # TODO add do not use pointlist flag,to export weapen and other object without pointlist tech.
-        # TODO add auto move ps-t7 picture.
 
     print("----------------------------------------------------------\r\nAll process done！")
 

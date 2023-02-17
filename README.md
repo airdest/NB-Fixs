@@ -1,10 +1,6 @@
 # NB-Fixs
 Tools, instructions and 3DFixs for make custom models on NB.
 
-If you have any question, please tell me at this discord channel or open an issue: 
-
-https://discord.gg/HRT9Rh5x3R
-
 # Notes
 1.Fixs is located at discord's FIXS&RESOURCES RELEASE category.
 These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.

@@ -268,7 +268,7 @@ if __name__ == "__main__":
     GLOBAL_ELEMENT_NUMBER = b"5"
 
     # combine the output filename.
-    source_names = ["body"]
+    source_names = ["cloth"]
     for source_name in source_names:
         split_file(source_name)
 

@@ -43,10 +43,7 @@ class Element:
         if self.semantic_name == b"COLOR":
             self.byte_width = 4
         if self.semantic_name == b"TEXCOORD":
-            if self.semantic_index == b"0":
-                self.byte_width = 8
-            else:
-                self.byte_width = 8
+            self.byte_width = 8
         if self.semantic_name == b"BLENDWEIGHTS":
             self.byte_width = 16
         if self.semantic_name == b"BLENDINDICES":
@@ -64,15 +61,15 @@ class HeaderInfo:
     elementlist = None
 
 
-GLOBAL_ELEMENT_NUMBER = None
-
-
-def get_header_info(vb_file_name):
-
+def get_header_info(vb_file_name, max_element_number):
+    """
+    :param vb_file_name: 要分割的vb文件名称
+    :param max_element_number:  byte类型，例如b"5"，代表读取的fmt文件一共有6个元素，因为是从0开始的
+    :return:
+    """
     vb_file = open(vb_file_name, 'rb')
 
     header_info = HeaderInfo()
-
 
     header_process_over = False
 
@@ -152,7 +149,7 @@ def get_header_info(vb_file_name):
                 # single element process over.
                 elements_single_process_over = True
 
-            if element_tmp.element_number == GLOBAL_ELEMENT_NUMBER and elements_single_process_over:
+            if element_tmp.element_number == max_element_number and elements_single_process_over:
                 header_info.elementlist = element_list
                 elements_all_process_over = True
                 break
@@ -162,7 +159,20 @@ def get_header_info(vb_file_name):
     return header_info
 
 
-def split_file(source_name):
+def split_file(source_name, max_element_number=b"5"):
+    """
+    :param source_name:
+    :param max_element_number:  要从fmt文件中读取的最大的element的索引，从0开始读取到这个最大索引结束
+    # set element number ,Naraka will be 5 ,and plus TEXCOORD 1 ,it will be 6.
+    这里是5的原因是有6个元素：
+    POSITION、NORMAL、TANGENT、BLENDWEIGHTS、BLENDINDICES、TEXCOORD
+    有一些模型包含多个TEXCOORD，比如殷紫萍红皮上衣包含TEXCOORD和TEXCOORD1，此时设为6
+
+    这里之所以要手动指定一个数字，是因为有时重新导入到游戏中时，在存在多个TEXCOORD的情况下，只有第一个TEXCOORD是有用的
+    比如TEXCOORD1的索引为b"6"，则我们只需要读取到b"5"的TEXCOORD就够了，所以这里的数字由人为手动控制，便于调试
+    关于第二个TEXCOORD1并未导入游戏导致模型变成透明，这一点还需验证
+    :return:
+    """
     vb_name = source_name + ".vb"
     fmt_name = source_name + ".fmt"
 
@@ -170,7 +180,7 @@ def split_file(source_name):
     vb_file_buffer = vb_file.read()
     vb_file.close()
 
-    header_info = get_header_info(fmt_name)
+    header_info = get_header_info(fmt_name, max_element_number)
 
     # fmt文件的原始步长
     combined_stride = int(header_info.stride.decode())
@@ -184,10 +194,19 @@ def split_file(source_name):
     # strides
     width_list = []
 
+    # element_names
+    element_name_list = []
+
     for element in header_info.elementlist:
         offset_list.append(int(element.aligned_byte_offset.decode()))
         width_list.append(element.byte_width)
-    print(width_list)
+        if element.semantic_index == b"0":
+            element_name_list.append(element.semantic_name)
+        else:
+            element_name_list.append(element.semantic_name + element.semantic_index)
+
+    # print(width_list)
+    # print(element_name_list)
 
     # use to store parsed vertex_data.
     vertex_data_list = [[] for i in range(vertex_count)]
@@ -199,64 +218,48 @@ def split_file(source_name):
             vertex_data = vb_file_buffer[start_index:start_index + width_list[index]]
             vertex_data_list[i].append(vertex_data)
 
-    print(vertex_data_list[0])
+    # print(vertex_data_list[0])
 
-    # parse vertex_data_list，and load vb0,vb1,vb2
-    vb0_vertex_data = [[] for i in range(vertex_count)]
-    vb1_vertex_data = [[] for i in range(vertex_count)]
-    vb2_vertex_data = [[] for i in range(vertex_count)]
+    position_vertex_data = [[] for i in range(vertex_count)]
+    blend_vertex_data = [[] for i in range(vertex_count)]
+    texcoord_vertex_data = [[] for i in range(vertex_count)]
 
-    """
-    vb0 for POSITION，NORMAL。TANGENT
-    vb1 for BLENDWEIGHTS，BLENDINDICES
-    vb2 for TEXCOORD
-    """
     for index in range(len(width_list)):
         for i in range(vertex_count):
-            # POSITION
-            if index == 0:
-                vb0_vertex_data[i].append(vertex_data_list[i][0])
-            # NORMAL
-            if index == 1:
-                vb0_vertex_data[i].append(vertex_data_list[i][1])
-            # TANGENT
-            if index == 2:
-                vb0_vertex_data[i].append(vertex_data_list[i][2])
+            if element_name_list[index] in [b"POSITION", b"NORMAL", b"TANGENT"]:
+                position_vertex_data[i].append(vertex_data_list[i][index])
 
-            # BLENDWEIGHT
-            if index == 3:
-                vb1_vertex_data[i].append(vertex_data_list[i][3])
-            # BLENDINDICES
-            if index == 4:
-                vb1_vertex_data[i].append(vertex_data_list[i][4])
+            if element_name_list[index] in [b"BLENDWEIGHTS", b"BLENDINDICES"]:
+                blend_vertex_data[i].append(vertex_data_list[i][index])
 
-            # TEXCOORD
-            if index == 5:
-                vb2_vertex_data[i].append(vertex_data_list[i][5])
+            if element_name_list[index] in [b"TEXCOORD", b"TEXCOORD1"]:
+                texcoord_vertex_data[i].append(vertex_data_list[i][index])
 
-    vb0_bytes = b""
-    for vertex_data in vb0_vertex_data:
+    position_bytes = b""
+    for vertex_data in position_vertex_data:
         for data in vertex_data:
-            vb0_bytes = vb0_bytes + data
-    vb1_bytes = b""
-    for vertex_data in vb1_vertex_data:
-        for data in vertex_data:
-            vb1_bytes = vb1_bytes + data
-    vb2_bytes = b""
-    for vertex_data in vb2_vertex_data:
-        for data in vertex_data:
-            vb2_bytes = vb2_bytes + data
+            position_bytes = position_bytes + data
 
-    output_vb0_filename = source_name + "_POSITION.buf"
-    output_vb1_filename = source_name + "_BLEND.buf"
-    output_vb2_filename = source_name + "_TEXCOORD.buf"
+    blend_bytes = b""
+    for vertex_data in blend_vertex_data:
+        for data in vertex_data:
+            blend_bytes = blend_bytes + data
 
-    with open(output_vb0_filename, "wb+") as output_vb0_file:
-        output_vb0_file.write(vb0_bytes)
-    with open(output_vb1_filename, "wb+") as output_vb1_file:
-        output_vb1_file.write(vb1_bytes)
-    with open(output_vb2_filename, "wb+") as output_vb2_file:
-        output_vb2_file.write(vb2_bytes)
+    texcoord_bytes = b""
+    for vertex_data in texcoord_vertex_data:
+        for data in vertex_data:
+            texcoord_bytes = texcoord_bytes + data
+
+    output_position_filename = source_name + "_POSITION.buf"
+    output_blend_filename = source_name + "_BLEND.buf"
+    output_texcoord_filename = source_name + "_TEXCOORD.buf"
+
+    with open(output_position_filename, "wb+") as output_position_file:
+        output_position_file.write(position_bytes)
+    with open(output_blend_filename, "wb+") as output_blend_file:
+        output_blend_file.write(blend_bytes)
+    with open(output_texcoord_filename, "wb+") as output_texcoord_file:
+        output_texcoord_file.write(texcoord_bytes)
 
 
 if __name__ == "__main__":
@@ -264,12 +267,11 @@ if __name__ == "__main__":
     work_dir = "C:/Users/Administrator/Desktop/NarakaLoaderV1.1/NarakaTest/"
     os.chdir(work_dir)
 
-    # set element number ,Naraka must be 5.
-    GLOBAL_ELEMENT_NUMBER = b"5"
-
     # combine the output filename.
     source_names = ["cloth"]
+
     for source_name in source_names:
-        split_file(source_name)
+        print("Processing " + source_name + ".vb")
+        split_file(source_name, max_element_number=b"5")
 
     print("----------------------------------------------------------\r\nAll process done！")

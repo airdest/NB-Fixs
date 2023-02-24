@@ -185,7 +185,7 @@ def check_sanity_for_chunks(vb0_pointlist_vertex_data_chunks, check_texcoord=Fal
             print("texcoord相同")
 
 
-    # 根据过滤无效数据后的结果去除chunks中的无效element
+    # 根据过滤无效数据后的结果去除chunks中的无效element的vertex-data
     checked_vertex_data_chunks = {}
     for index in vb0_pointlist_vertex_data_chunks:
         new_vertex_data_chunk = []
@@ -243,6 +243,9 @@ def read_trianglelist_vertex_data_chunks(trianglelist_indices):
         # 第三步，抽取第一个，检查每个元素是否有问题，有问题的去掉，没问题的留下来
         checked_vertex_data_chunks = check_sanity_for_chunks(vb0_trianglelist_vertex_data_chunks, check_texcoord=True)
 
+        # TODO 第四步，去除没有包含TEXCOORD或者TEXCOORD格式不正确的元素
+
+
         trianglelist_vb_files_chunks[trianglelist_index] = checked_vertex_data_chunks
 
     # 然后把这些chunks中不合理的和重复的去掉，这里要注意，首先要根据ib获取其中内容
@@ -266,18 +269,6 @@ def merge_pointlist_match_files(pointlist_index, trianglelist_indices, part_name
     # 读取trianglelist中存储的vertex_data_chunks
     # 注意！trianglelist可能会出现一个indexbuffer中装载多个物体的情况
 
-
-
-
-
-
-
-
-
-    # TODO 第二步，从trianglelist中读取COLOR,TEXCOORD,TEXCOORD1等信息
-    read_trianglelist_element_list = [b"COLOR", b"TEXCOORD", b"TEXCOORD1"]
-
-    # TODO 转化一下思路，先读取所有的vertex-data信息，然后再根据规则进行过滤，这样比较快
 
     #
     # final_trianglelist_vertex_data_chunk_list_list = []

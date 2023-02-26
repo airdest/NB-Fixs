@@ -1,32 +1,30 @@
-# NB-Fixs
-Tools, instructions and 3DFixs for make custom models on NB.
+# 永动无间反和谐开源项目
+QQ群：767866253   长时间不发言会被踢出并永久拉黑。
 
-# Notes
-1.Fixs is located at discord's FIXS&RESOURCES RELEASE category.
-These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
-Use these fix may let you get banned for 30 days or forever, depends on luck.
+你可以使用Script目录下的vb_merge目录下的脚本，将多个vb0,vb1,vb2等等多个vb文件融合成为最终的一个vb0文件，以便导入Blender。
 
-you can use script under vb_merge folder to merge FrameAnalysisDump Files , 
-and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
+你可以使用Script目录下的vb_split目录下的脚本，将Blender导出的ib和vb文件正确分割，以便正确地重新导入回游戏。
 
-and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, 
-so you can import it back into game.
+# 关于封号
+30天封号周期：
+每3个月大规模封号一次（定时批处理），最近两次封号时间分别是2022年11月24-25日，2023年2月24-25日，每隔3个月的24号前把东西卸掉、游戏重装可一定几率上避免被封号
+除了定时封一批之外，还会有内鬼套你的游戏账号信息，然后直接封你号。
 
-For convenience,  It's better to use NarakaLoaderV1.0 ,so you can correctly import vb file into game, 
-and you can press F3 to open or close the fix.
+所以在任何平台发布视频图片时，请务必不要暴露关于你账号的一切数值，包括昵称，id，侧边栏id，各种经验值，各种等级，古币幻丝金砖数量，延迟帧数等等。
+分享捏脸也不要将数值完全相同，否则会有内鬼根据捏脸数值在数据库中查询到你的账号信息。
 
-# DISCLAIMER
-I strongly recommend only using private servers or Single-Player Game for modding. 
+也不要相信群里有人和你组队一起玩游戏，此群为技术交流群，主打技术交流，只有内鬼会想办法套你游戏账号信息。
 
-Using these tools on Muilti-Player Game servers carries a high risk of being banned. 
+# 免责声明
+此项目内容仅供学习使用，使用本项目内容所引发的一切后果与责任，由使用者自行承担，下载或使用本项目内容视为默认同意此免责声明。
 
-I do not condone the use of these tools and programs on official servers, 
+此项目LICENSE为：GNU GENERAL PUBLIC LICENSE，这意味着你不可以使用此项目中任何内容进行任何形式的商业活动，如有违反，后果自负。
 
-and take no responsibility for any consequences as a result if you do.
+此项目内容来源于网络搜集和笔记整理，如对您的权益有所侵犯，请在QQ群中联系作者进行删除。
 
-# Acknowledgements
-Thanks a lot to bob3b, DarkStarSword, for their tutorial and code reference!
+# 特别鸣谢
+感谢 bob3b, DarkStarSword 提供的教学和代码参考。
 
-Thanks a lot to Helixmod, and chiri for open sourcing 3dmigoto！
+感谢 Helixmod软件及社区提供的帮助, 感谢chiri开源的3Dmigoto。
 
-Special thanks for SilentNightSound's GIMI project for code reference.
+特别感谢SilentNightSound's GIMI项目，它是本项目最主要的参考来源。

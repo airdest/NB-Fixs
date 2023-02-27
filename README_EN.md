@@ -1,6 +1,8 @@
 # NB-Fixs
 Tools, instructions and 3DFixs for make custom models on NB.
 
+If you have any question,you can ask me at discord: https://discord.gg/eJVwdNvxkQ
+
 # Notes
 1.These fix may only work on NVDIA graphics,and may work on AMD graphics incorrectly.
 Use these fix may let you get banned for 30 days.

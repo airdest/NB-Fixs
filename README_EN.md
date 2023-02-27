@@ -11,8 +11,8 @@ and then import it into Blender by DarkStarSward's 3dmigoto blender plugin.
 and when you export it as vb format ,you need to use script under vb_split folder to split vb file to correct parts, 
 so you can import it back into game.
 
-For convenience,  It's better to use NarakaLoaderV1.0 ,so you can correctly import vb file into game, 
-and you can press F3 to open or close the fix.
+For convenience,  It's better to use the latest version of NarakaLoader ,so you can correctly import vb file into game, 
+and you can press F3 to open or close the fix,F4 to change color between your pre-set colors.
 
 # DISCLAIMER
 I strongly recommend only using private servers or Single-Player Game for modding. 

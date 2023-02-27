@@ -6,7 +6,7 @@ https://discord.gg/eJVwdNvxkQ
 
 3D游戏Fix技术交流 QQ群：767866253   
 
-QQ群长时间不发言会被踢出并永久拉黑，DISCORD可常驻。
+QQ群3天不发言即被踢出，不留潜水的，DISCORD可常驻。
 
 你可以使用Script目录下的vb_merge目录下的脚本，将多个vb0,vb1,vb2等等多个vb文件融合成为最终的一个vb0文件，以便导入Blender。
 

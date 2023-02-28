@@ -742,13 +742,13 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    FrameAnalyseFolder = "FrameAnalysis-2023-02-28-114415"
+    FrameAnalyseFolder = "FrameAnalysis-2023-02-28-145125"
     os.chdir("C:/Users/Administrator/Desktop/NBLoaderV1.1/" + FrameAnalyseFolder + "/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"ccb02be6":"body"}
+    ib_hashs = {"d7b004d8":"cloth","116d6450":"body"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS,
         # and this value is different between games which use pointlist topology.

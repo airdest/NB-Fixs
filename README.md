@@ -4,7 +4,7 @@ Discord：
 
 https://discord.gg/eJVwdNvxkQ
 
-3D游戏Fix技术交流 QQ群：767866253(QQ群经常被举报，建议加discord)
+3D游戏Fix技术交流 QQ群：767866253(QQ群经常被举报导致搜索不到，建议加discord)
 
 QQ群30天不发言会被清理，DISCORD可常驻。
 

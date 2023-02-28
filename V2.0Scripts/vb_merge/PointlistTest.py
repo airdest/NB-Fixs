@@ -507,6 +507,8 @@ def view_all_pointlist_in_blender(pointlist_indices_dict):
 
 
 if __name__ == "__main__":
+    # TODO 新增指定输出目录，这样融合脚本的输出和分割脚本的输入就可以作为最终的mod文件夹了。
+
     # Here is the ROOT VS the game currently use, Naraka use e8425f64cfb887cd as it's ROOT VS now.
     # and this value is different between games which use pointlist topology.
     NarakaRootVS = "e8425f64cfb887cd"

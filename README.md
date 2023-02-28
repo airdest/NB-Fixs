@@ -4,7 +4,7 @@ Discord：
 
 https://discord.gg/eJVwdNvxkQ
 
-3D游戏Fix技术交流 QQ群：767866253   
+3D游戏Fix技术交流 QQ群：767866253(QQ群经常被举报，建议加discord)
 
 QQ群30天不发言会被清理，DISCORD可常驻。
 
@@ -34,6 +34,7 @@ QQ群30天不发言会被清理，DISCORD可常驻。
 此项目LICENSE为：GNU GENERAL PUBLIC LICENSE，这意味着你不可以使用此项目中任何内容进行任何形式的商业活动，如有违反，后果自负。
 
 此项目内容来源于网络搜集和笔记整理，如对您的权益有所侵犯，请在QQ群中联系作者进行删除。
+
 
 # 特别鸣谢
 感谢 bob3b, DarkStarSword 提供的教学和代码参考。

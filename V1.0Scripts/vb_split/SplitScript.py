@@ -261,13 +261,13 @@ def split_file(source_name):
 
 if __name__ == "__main__":
     # set work dir.
-    work_dir = "C:/Users/Administrator/Desktop/NBLoaderV1.1/NarakaTest/"
+    work_dir = "C:/Users/Administrator/Desktop/NarakaTest/"
     os.chdir(work_dir)
 
     # set element number ,Naraka must be 5.
     GLOBAL_ELEMENT_NUMBER = b"5"
 
     # combine the output filename.
-    source_names = ["cloth"]
+    source_names = ["body","cloth"]
     for source_name in source_names:
         split_file(source_name)

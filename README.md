@@ -1,8 +1,6 @@
 # 永劫无间反和谐开源项目
 
-Discord：
-
-https://discord.gg/eJVwdNvxkQ
+Discord：https://discord.gg/eJVwdNvxkQ
 
 3D游戏Fix技术交流 QQ群：767866253(QQ群经常被举报导致搜索不到，建议加discord)
 
@@ -13,6 +11,8 @@ QQ群30天不发言会被清理，DISCORD可常驻。
 你可以使用Script目录下的vb_split目录下的脚本，将Blender导出的ib和vb文件正确分割，以便正确地重新导入回游戏。
 
 想了解原理可以查看Guides中的学习笔记和资料，脚本逻辑和其中的一些注释可能会起到参考作用。
+
+所有mod已全部转移至discord，通过Hunting验证后即可获取。
 
 有条件可支持作者，作者的爱发电id是：在下黑桃六有何贵干
 

@@ -1,10 +1,12 @@
 # 永劫无间反和谐开源项目
 
-Discord：https://discord.gg/eJVwdNvxkQ
+永劫无间反和谐补丁 Discord：https://discord.gg/eJVwdNvxkQ
 
-3D游戏Fix技术交流 QQ群：767866253(QQ群经常被举报导致搜索不到，建议加discord)
+QQ群：767866253(QQ群经常被举报导致搜索不到，建议加discord)
 
-QQ群30天不发言会被清理，DISCORD可常驻。
+目前除沈妙外所有女英雄都有果体mod，还有近百款清凉mod，几乎所有女英雄皮肤都有mod，在discord中通过验证后即可领取。
+
+# 脚本使用
 
 你可以使用Script目录下的vb_merge目录下的脚本，将多个vb0,vb1,vb2等等多个vb文件融合成为最终的一个vb0文件，以便导入Blender。
 

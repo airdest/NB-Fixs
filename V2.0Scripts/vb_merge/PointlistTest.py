@@ -373,74 +373,6 @@ def merge_pointlist_match_files(pointlist_index, trianglelist_indices, part_name
     trianglelist_vertex_data_chunks = read_trianglelist_vertex_data_chunks(trianglelist_indices)
 
 
-
-    #
-    # # Based on output_element_list，generate a final header_info.
-    # # TODO 这里应该根据pointlist 和 trianglelist中真实存在的元素来确定到底输出哪些
-    # output_element_list = [b"POSITION", b"NORMAL", b"TANGENT", b"BLENDWEIGHTS", b"BLENDINDICES", b"COLOR", b"TEXCOORD", b"TEXCOORD1"]
-    #
-    # header_info = get_header_info_by_elementnames(output_element_list)
-    # # Set vertex count
-    # header_info.vertex_count = str(len(final_trianglelist_vertex_data_chunk_list)).encode()
-    #
-    # # Generate a final vb file.
-    # if len(pointlist_vertex_data_chunk_list) != len(final_trianglelist_vertex_data_chunk_list):
-    #     print(
-    #         "The length of the pointlist_vertex_data_chunk_list and the final_trianglelist_vertex_data_chunk_list should equal!")
-    #     exit(1)
-    #
-    # final_vertex_data_chunk_list = [[] for i in range(int(str(header_info.vertex_count.decode())))]
-    # for index in range(len(pointlist_vertex_data_chunk_list)):
-    #     final_vertex_data_chunk_list[index] = final_vertex_data_chunk_list[index] + pointlist_vertex_data_chunk_list[
-    #         index]
-    #     final_vertex_data_chunk_list[index] = final_vertex_data_chunk_list[index] + \
-    #                                           final_trianglelist_vertex_data_chunk_list[index]
-    #
-    # # Solve TEXCOORD1 can't match the element's semantic name TEXCOORD problem.
-    # element_aligned_byte_offsets = {}
-    # new_element_list = []
-    # for element in header_info.elementlist:
-    #     print("-----------------")
-    #     print(element.semantic_name)
-    #     print(element.semantic_index)
-    #
-    #     element_aligned_byte_offsets[element.semantic_name] = element.aligned_byte_offset
-    #     new_element_list.append(element)
-    # header_info.elementlist = new_element_list
-    #
-    # # Revise aligned byte offset
-    # new_final_vertex_data_chunk_list = []
-    # for vertex_data_chunk in final_vertex_data_chunk_list:
-    #     new_vertex_data_chunk = []
-    #     for vertex_data in vertex_data_chunk:
-    #         # TODO 这里报错找不到TEXCOORD1
-    #         vertex_data.aligned_byte_offset = element_aligned_byte_offsets[vertex_data.element_name]
-    #         new_vertex_data_chunk.append(vertex_data)
-    #     new_final_vertex_data_chunk_list.append(new_vertex_data_chunk)
-    # final_vertex_data_chunk_list = new_final_vertex_data_chunk_list
-    #
-    # output_vb_fileinfo = VbFileInfo()
-    # output_vb_fileinfo.header_info = header_info
-    # output_vb_fileinfo.vertex_data_chunk_list = final_vertex_data_chunk_list
-    #
-    # ib_file_bytes = get_ib_bytes_by_indices(trianglelist_indices)
-    #
-    # # Output to file.
-    # for index in range(len(ib_file_bytes)):
-    #     ib_file_byte = ib_file_bytes[index]
-    #     output_vbname = "output/" + part_name + "-vb0.txt"
-    #     output_ibname = "output/" + part_name + "-ib.txt"
-    #     output_vb_fileinfo.output_filename = output_vbname
-    #
-    #     # Write to ib file.
-    #     output_ibfile = open(output_ibname, "wb+")
-    #     output_ibfile.write(ib_file_byte)
-    #     output_ibfile.close()
-    #
-    #     # Write to vb file.
-    #     output_model_txt(output_vb_fileinfo)
-
-
 def view_all_pointlist_in_blender(pointlist_indices_dict):
     for pointlist_index in pointlist_indices_dict:
         # 读取pointlist中存储的vertex_data_chunks
@@ -459,49 +391,51 @@ def view_all_pointlist_in_blender(pointlist_indices_dict):
         header_info.topology = b"trianglelist"
 
         # Solve TEXCOORD1 can't match the element's semantic name TEXCOORD problem.
-        # 设置正确的索引偏移量
+        # 给element_list设置正确的索引偏移量
         element_aligned_byte_offsets = {}
         new_element_list = []
         for element in header_info.elementlist:
-            print("-----------------")
-            print(element.semantic_name)
-            print(element.semantic_index)
-
+            # print("-----------------")
+            # print(element.semantic_name)
+            # print(element.semantic_index)
             element_aligned_byte_offsets[element.semantic_name] = element.aligned_byte_offset
             new_element_list.append(element)
         header_info.elementlist = new_element_list
 
-        # Revise aligned byte offset
-        new_final_vertex_data_chunk_list = []
-        for vertex_data_chunk in final_vertex_data_chunk_list:
-            new_vertex_data_chunk = []
-            for vertex_data in vertex_data_chunk:
-                # TODO 这里报错找不到TEXCOORD1
-                vertex_data.aligned_byte_offset = element_aligned_byte_offsets[vertex_data.element_name]
-                new_vertex_data_chunk.append(vertex_data)
-            new_final_vertex_data_chunk_list.append(new_vertex_data_chunk)
-        final_vertex_data_chunk_list = new_final_vertex_data_chunk_list
+        # 输出elementlist看一下
+        for element in new_element_list:
+            print(element.semantic_name)
+            print(element.aligned_byte_offset)
+        print("-----------------------------")
+        # TODO 保留部分Vertex-data元素
 
-        output_vb_fileinfo = VbFileInfo()
-        output_vb_fileinfo.header_info = header_info
-        output_vb_fileinfo.vertex_data_chunk_list = final_vertex_data_chunk_list
+        # TODO 重新设置所有vertex-data 中对应的alygned_byte_offset
 
-        ib_file_bytes = get_ib_bytes_by_indices(trianglelist_indices)
+        # TODO 输出IB文件
 
-        # Output to file.
-        for index in range(len(ib_file_bytes)):
-            ib_file_byte = ib_file_bytes[index]
-            output_vbname = "output/" + part_name + "-vb0.txt"
-            output_ibname = "output/" + part_name + "-ib.txt"
-            output_vb_fileinfo.output_filename = output_vbname
+        # TODO 对每一个IB文件都输出对应的VB文件
 
-            # Write to ib file.
-            output_ibfile = open(output_ibname, "wb+")
-            output_ibfile.write(ib_file_byte)
-            output_ibfile.close()
 
-            # Write to vb file.
-            output_model_txt(output_vb_fileinfo)
+        # output_vb_fileinfo = VbFileInfo()
+        # output_vb_fileinfo.header_info = header_info
+        # output_vb_fileinfo.vertex_data_chunk_list = final_vertex_data_chunk_list
+        #
+        # ib_file_bytes = get_ib_bytes_by_indices(trianglelist_indices)
+        #
+        # # Output to file.
+        # for index in range(len(ib_file_bytes)):
+        #     ib_file_byte = ib_file_bytes[index]
+        #     output_vbname = "output/" + part_name + "-vb0.txt"
+        #     output_ibname = "output/" + part_name + "-ib.txt"
+        #     output_vb_fileinfo.output_filename = output_vbname
+        #
+        #     # Write to ib file.
+        #     output_ibfile = open(output_ibname, "wb+")
+        #     output_ibfile.write(ib_file_byte)
+        #     output_ibfile.close()
+        #
+        #     # Write to vb file.
+        #     output_model_txt(output_vb_fileinfo)
 
     print("所有pointlist处理完成")
 
@@ -513,10 +447,10 @@ if __name__ == "__main__":
     # and this value is different between games which use pointlist topology.
     NarakaRootVS = "e8425f64cfb887cd"
     # Here is your Loader location.
-    NarakaLoaderFolder = "C:/Users/Administrator/Desktop/NarakaLoaderV1.1/"
+    NarakaLoaderFolder = "C:/Users/Administrator/Desktop/NBLoaderV1.1/"
 
     # Set work dir, here is your FrameAnalysis dump dir.
-    NarakaFrameAnalyseFolder = "FrameAnalysis-2023-02-24-152122"
+    NarakaFrameAnalyseFolder = "FrameAnalysis-2023-03-02-132041"
 
     os.chdir(NarakaLoaderFolder + NarakaFrameAnalyseFolder + "/")
     if not os.path.exists('output'):

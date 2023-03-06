@@ -32,7 +32,7 @@ def get_all_pointlist_trianglelist_index():
     print("Trianglelist vb indices: " + str(trianglelist_indices_dict))
     print("共"+ str(len(trianglelist_indices_dict)) +"个")
 
-    return pointlist_indices_dict,trianglelist_indices_dict
+    return pointlist_indices_dict, trianglelist_indices_dict
 
 
 def match_by_vertex_count(pointlist_indices_dict={},trianglelist_indices_dict={}):
@@ -447,10 +447,10 @@ if __name__ == "__main__":
     # and this value is different between games which use pointlist topology.
     NarakaRootVS = "e8425f64cfb887cd"
     # Here is your Loader location.
-    NarakaLoaderFolder = "C:/Users/Administrator/Desktop/NBLoaderV1.1/"
+    NarakaLoaderFolder = "C:/Users/Administrator/Desktop/GenshinLoader/"
 
     # Set work dir, here is your FrameAnalysis dump dir.
-    NarakaFrameAnalyseFolder = "FrameAnalysis-2023-03-02-132041"
+    NarakaFrameAnalyseFolder = "FrameAnalysis-2023-03-06-135256"
 
     os.chdir(NarakaLoaderFolder + NarakaFrameAnalyseFolder + "/")
     if not os.path.exists('output'):
@@ -462,16 +462,16 @@ if __name__ == "__main__":
 
     # TODO 非常重要，这里会将所有的pointlist的vb中的POSITION、NORMAL、TANGENT组合成为一个可以导入到blender中的vb文件
     #  然后我们就可以去blender中查看所有的pointlist所对应的物体了
-    view_all_pointlist_in_blender(pointlist_indices_dict)
+    # view_all_pointlist_in_blender(pointlist_indices_dict)
 
 
 
 
 
     # print("----------------------------------------------------------")
-    # print("开始对每个pointlist和trianglelist做vertex_count匹配")
-    # pointlist_match_dict = match_by_vertex_count(pointlist_indices_dict,trianglelist_indices_dict)
-    #
+    print("开始对每个pointlist和trianglelist做vertex_count匹配")
+    pointlist_match_dict = match_by_vertex_count(pointlist_indices_dict,trianglelist_indices_dict)
+
     # print("----------------------------------------------------------")
     # print("开始对每个pointlist匹配到的物体做融合输出")
     # count = 0

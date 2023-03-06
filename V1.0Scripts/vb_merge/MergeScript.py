@@ -180,6 +180,7 @@ def get_header_info(vb_file_name, max_element_number):
 
 
 def read_vertex_data_chunk_list_gracefully(file_index, read_element_list, only_vb1=False, sanity_check=False):
+    # TODO 需添加指定从哪个vb读取
     """
     :param file_index:  the file index numbers you want to process.
     :param read_element_list:  the element name list you need to read.
@@ -192,6 +193,9 @@ def read_vertex_data_chunk_list_gracefully(file_index, read_element_list, only_v
         vb_filenames = sorted(glob.glob(file_index + '-vb1*txt'))
     else:
         vb_filenames = sorted(glob.glob(file_index + '-vb*txt'))
+
+    print(only_vb1)
+    print(vb_filenames)
 
     header_info = get_header_info(vb_filenames[0], b"9")
     vertex_count = header_info.vertex_count
@@ -742,20 +746,20 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    FrameAnalyseFolder = "FrameAnalysis-2023-03-02-142458"
+    FrameAnalyseFolder = "zhumu"
     os.chdir("C:/Users/Administrator/Desktop/NBLoaderV1.1/" + FrameAnalyseFolder + "/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"ccb02be6":"body"}
+    ib_hashs = {"e6c055f1":"cloth"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS,
         # and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")
         # TODO add do not use pointlist flag,to export weapen and other object without pointlist tech.
         # TODO add use specific index to read pointlist info.
-        #  重要情报：在不同的界面进行dump，对pointlist是否使用会有不同
+        #  猜测：在不同的界面进行dump，对pointlist是否使用会有不同
 
     print("----------------------------------------------------------\r\nAll process done！")
 

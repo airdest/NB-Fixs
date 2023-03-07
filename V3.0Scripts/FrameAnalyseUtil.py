@@ -2,7 +2,140 @@ import os
 import re
 import glob
 import shutil
-from DataStructure import *
+
+class HeaderInfo:
+    file_index = None
+    stride = None
+    first_vertex = None
+    vertex_count = None
+    topology = None
+
+    # Header have many semantic element,like POSITION,NORMAL,COLOR etc.
+    elementlist = None
+
+
+class Element:
+    semantic_name = None
+    semantic_index = None
+    format = None
+    input_slot = None
+    aligned_byte_offset = None
+    input_slot_class = None
+    instance_data_step_rate = None
+
+    # the order of the element,start from 0.
+    element_number = None
+
+    # the byte length of this Element's data.
+    byte_width = None
+
+
+class VertexData:
+    vb_file_number = b"vb0"  # vb0
+    index = None
+    aligned_byte_offset = None
+    element_name = None
+    data = None
+
+    def __init__(self, line_bytes=b""):
+        if line_bytes != b"":
+            line_str = str(line_bytes.decode())
+            # vb_file_number = line_str.split("[")[0]
+            # because we vb_merge into one file, so it always be vb0
+            vb_file_number = "vb0"
+            self.vb_file_number = vb_file_number.encode()
+
+            tmp_left_index = line_str.find("[")
+            tmp_right_index = line_str.find("]")
+            index = line_str[tmp_left_index + 1:tmp_right_index]
+            self.index = index.encode()
+
+            tmp_left_index = line_str.find("]+")
+            aligned_byte_offset = line_str[tmp_left_index + 2:tmp_left_index + 2 + 3]
+            self.aligned_byte_offset = aligned_byte_offset.encode()
+
+            tmp_right_index = line_str.find(": ")
+            element_name = line_str[tmp_left_index + 2 + 3 + 1:tmp_right_index]
+            self.element_name = element_name.encode()
+
+            tmp_left_index = line_str.find(": ")
+            tmp_right_index = line_str.find("\r\n")
+            data = line_str[tmp_left_index + 2:tmp_right_index]
+            self.data = data.encode()
+
+    def __str__(self):
+        return self.vb_file_number + b"[" + self.index + b"]+" + self.aligned_byte_offset.decode().zfill(3).encode() + b" " + self.element_name + b": " + self.data + b"\r\n"
+
+
+class VbFileInfo:
+    header_info = HeaderInfo()
+    vb0_vertex_data = {}
+    output_filename = None
+
+
+def get_header_info_by_elementnames(output_element_list):
+    header_info = HeaderInfo()
+    # 1.Generate element_list.
+    element_list = []
+    for element_name in output_element_list:
+        element = Element()
+
+        element.semantic_name = element_name
+        element.input_slot = b"0"
+        element.input_slot_class = b"per-vertex"
+        element.instance_data_step_rate = b"0"
+
+        if element_name.endswith(b"POSITION"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32B32_FLOAT"
+            element.byte_width = 12
+        elif element_name.endswith(b"NORMAL"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32B32_FLOAT"
+            element.byte_width = 12
+        elif element_name.endswith(b"TANGENT"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32B32A32_FLOAT"
+            element.byte_width = 16
+        elif element_name.endswith(b"BLENDWEIGHTS"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32B32A32_FLOAT"
+            element.byte_width = 16
+        elif element_name.endswith(b"BLENDINDICES"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32B32A32_SINT"
+            element.byte_width = 16
+        elif element_name.endswith(b"COLOR"):
+            element.semantic_index = b"0"
+            element.format = b"R8G8B8A8_UNORM"
+            element.byte_width = 4
+        elif element_name.endswith(b"TEXCOORD"):
+            element.semantic_index = b"0"
+            element.format = b"R32G32_FLOAT"
+            element.byte_width = 8
+        elif element_name.endswith(b"TEXCOORD1"):
+            element.semantic_index = b"1"
+            element.format = b"R32G32_FLOAT"
+            element.byte_width = 8
+
+        element_list.append(element)
+    # 2.Add aligned_byte_offset and element_number.
+    new_element_list = []
+    aligned_byte_offset = 0
+    for index in range(len(element_list)):
+        element = element_list[index]
+        element.element_number = str(index).encode()
+        element.aligned_byte_offset = str(aligned_byte_offset).encode()
+        aligned_byte_offset = aligned_byte_offset + element.byte_width
+        new_element_list.append(element)
+
+    # 3.Set element_list and stride.
+    header_info.first_vertex = b"0"
+    header_info.topology = b"trianglelist"
+    header_info.stride = str(aligned_byte_offset).encode()
+    header_info.elementlist = new_element_list
+
+    return header_info
 
 
 def get_topology_vertexcount(filename):
@@ -172,128 +305,4 @@ def output_model_txt(vb_file_info):
             output_file.write(b"\r\n")
 
     output_file.close()
-
-
-if __name__ == "__main__":
-    # TODO 新增指定输出目录，这样融合脚本的输出和分割脚本的输入就可以作为最终的mod文件夹了。
-    #  用1.0脚本分析原神dump文件，和原神的脚本做对比，拆解分析原神脚本思路
-    #  新增一个方法：pointlist和trianglelist配对后只输出配对成功的
-
-    # Here is the ROOT VS the game currently use, Naraka use e8425f64cfb887cd as it's ROOT VS now.
-    # and this value is different between games which use pointlist topology.
-    NarakaRootVS = "e8425f64cfb887cd"
-
-    # Here is your Loader location.
-    NarakaLoaderFolder = "C:/Users/Administrator/Desktop/GenshinLoader/"
-
-    # Set work dir, here is your FrameAnalysis dump dir.
-    NarakaFrameAnalyseFolder = "FrameAnalysis-2023-03-06-135256"
-
-    os.chdir(NarakaLoaderFolder + NarakaFrameAnalyseFolder + "/")
-    if not os.path.exists('output'):
-        os.mkdir('output')
-
-    print("----------------------------------------------------------------------------------")
-    print("开始读取所有pointlist和trianglelist的index：")
-    pointlist_indices_dict, trianglelist_indices_dict = get_all_pointlist_trianglelist_index()
-    # print(pointlist_indices_dict)
-    """
-    此处输出格式为：
-    {'000001': b'1126', '000002': b'523'}
-    key为索引，value为vb文件的vertex-count
-    """
-
-    print("----------------------------------------------------------------------------------")
-    print("移动所有ib文件到output目录")
-    for index in pointlist_indices_dict:
-        filename = glob.glob(str(index)+'-ib*.txt')[0]
-        print("Moving ： " + filename + " ....")
-        shutil.copy2(filename, 'output/' + filename)
-
-    print("----------------------------------------------------------------------------------")
-    print("读取pointlist的index列表中所有vb0的POSITION、NORMAL、TANGENT信息")
-    for index in pointlist_indices_dict:
-        retain_element_list = [b"POSITION", b"NORMAL", b"TANGENT"]
-        print("读取对应的vb0的element_list信息")
-        # 读取headerinfo
-        header_info = get_header_info_by_elementnames(retain_element_list)
-
-        # Set vertex count
-        header_info.vertex_count = pointlist_indices_dict.get(index)
-
-        # 设置topology为trianglelist，因为pointlist里面的默认是pointlist无法被读取
-        header_info.topology = b"trianglelist"
-
-        # Solve TEXCOORD1 can't match the element's semantic name TEXCOORD problem.
-        # 给element_list设置正确的索引偏移量
-        element_aligned_byte_offsets = {}
-        new_element_list = []
-        for element in header_info.elementlist:
-            # print("-----------------")
-            # print(element.semantic_name)
-            # print(element.semantic_index)
-            element_aligned_byte_offsets[element.semantic_name] = element.aligned_byte_offset
-            new_element_list.append(element)
-        header_info.elementlist = new_element_list
-
-        # 输出elementlist看一下
-        for element in new_element_list:
-            print(element.semantic_name)
-            print(element.aligned_byte_offset)
-        print("-----------------------------")
-
-        # 读取vb0文件的vertex_data
-        vb0_vertex_data = read_vb_files_vertex_data(index, only_vb0=True).get(b"vb0")
-        # print(output)
-        # print(output.__len__()) 只读取vb0的话，这里应该为1
-        """
-        这里的输出格式为：
-        {
-        b'vb0': {b'0': [<DataStructure.VertexData object at 0x000002287F9950D0>  , <DataStructure.VertexData object at 0x000002287F9C4390>], 
-                b'1': [<DataStructure.VertexData object at 0x000002287F9C43D0>, <DataStructure.VertexData object at 0x000002287F9C45D0>]
-                .....},
-        b'vb1': {b'0': [<DataStructure.VertexData object at 0x000002287F9950D0>  , <DataStructure.VertexData object at 0x000002287F9C4390>], 
-                b'1': [<DataStructure.VertexData object at 0x000002287F9C43D0>, <DataStructure.VertexData object at 0x000002287F9C45D0>]
-                .....}
-        }
-        """
-        print("保留指定的元素列表：")
-        new_vb0_vertex_data = {}
-        for offset in vb0_vertex_data:
-            vertex_data_list = vb0_vertex_data.get(offset)
-            new_vertex_data_list = []
-            for vertex_data in vertex_data_list:
-                """
-                class VertexData:
-                    vb_file_number = b"vb0"  # vb0
-                    index = None
-                    aligned_byte_offset = None
-                    element_name = None
-                    data = None
-                """
-                element_name = vertex_data.element_name
-                if element_name in retain_element_list:
-                    # print("重新设置vertex-data 中对应的alygned_byte_offset")
-                    vertex_data.aligned_byte_offset = element_aligned_byte_offsets.get(element_name)
-
-                    new_vertex_data_list.append(vertex_data)
-            new_vb0_vertex_data[offset] = new_vertex_data_list
-        print(new_vb0_vertex_data.get(b"0"))
-
-        print("输出vb0文件")
-        output_vb_fileinfo = VbFileInfo()
-        """
-        class VbFileInfo:
-            header_info = HeaderInfo()
-            vb0_vertex_data = {}
-            output_filename = None
-        """
-        output_vb_fileinfo.header_info = header_info
-        output_vb_fileinfo.vb0_vertex_data = new_vb0_vertex_data
-        output_vb_fileinfo.output_filename = "output/"+ glob.glob(str(index) + '-vb0*txt')[0]
-
-        # Write to vb file.
-        output_model_txt(output_vb_fileinfo)
-
-
 

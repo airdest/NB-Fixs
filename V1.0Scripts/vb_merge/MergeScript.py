@@ -746,20 +746,21 @@ def get_header_info_by_elementnames(output_element_list):
 
 if __name__ == "__main__":
     # Set work dir, here is your FrameAnalysis dump dir.
-    FrameAnalyseFolder = "zhumu"
+    FrameAnalyseFolder = "FrameAnalysis-2023-03-07-113959"
     os.chdir("C:/Users/Administrator/Desktop/NBLoaderV1.1/" + FrameAnalyseFolder + "/")
     if not os.path.exists('output'):
         os.mkdir('output')
 
     # Here is the ib you want to import into blender.
-    ib_hashs = {"e6c055f1":"cloth"}
+    # "1edd6d83":"part2","4d6916bb":"part4"
+    ib_hashs = {"0cdcc4ba":"part1","46b75b26":"part3","ab6ee00f":"part5","5c6f9df7":"body"}
     for input_ib_hash in ib_hashs:
         # Naraka use e8425f64cfb887cd as it's ROOT VS,
         # and this value is different between games which use pointlist topology.
         start_merge_files(input_ib_hash, ib_hashs.get(input_ib_hash), root_vs="e8425f64cfb887cd")
         # TODO add do not use pointlist flag,to export weapen and other object without pointlist tech.
         # TODO add use specific index to read pointlist info.
-        #  猜测：在不同的界面进行dump，对pointlist是否使用会有不同
+
 
     print("----------------------------------------------------------\r\nAll process done！")
 

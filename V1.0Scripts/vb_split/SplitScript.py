@@ -268,6 +268,6 @@ if __name__ == "__main__":
     GLOBAL_ELEMENT_NUMBER = b"5"
 
     # combine the output filename.
-    source_names = ["cloth2","cloth","body"]
+    source_names = ["part1","part3","part5"]
     for source_name in source_names:
         split_file(source_name)
